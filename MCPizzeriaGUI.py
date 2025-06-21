@@ -10,13 +10,13 @@
 
 ### --------- Bibliotheken en globale variabelen -----------------
 from tkinter import *
-import MCPizzeriaSQL
+import MCpizzeriaSQL
 
 
 ### ---------  Functie definities  -----------------
 
 def zoekKlant():
-    gevonden_klantnaam = MCPizzeriaSQL.zoekKlantInTabel(ingevoerde_klantnaam.get())
+    gevonden_klantnaam = MCpizzeriaSQL.zoekKlantInTabel(ingevoerde_klantnaam.get())
     print("gevonden klanten", gevonden_klantnaam)
     invoerVeldKlantnaam.delete(0, END) #invoerveld voor naam leeg maken
     invoerveldKlantNr.delete(0, END) #invoerveld voor klantNr leeg maken
@@ -27,7 +27,7 @@ def zoekKlant():
          invoerVeldKlantnaam.insert(END, rij[1]) 
 
 def zoekPizzanaam():
-    gevonden_pizzanaam = MCPizzeriaSQL.zoekPizzaInTabel(ingevoerde_pizzanaam.get())
+    gevonden_pizzanaam = MCpizzeriaSQL.zoekPizzaInTabel(ingevoerde_pizzanaam.get())
     print("gevonden pizzanaam", gevonden_pizzanaam)
     invoerVeldPizzanaam.delete(0, END) #invoerveld voor pizzanaam leegmaken
     for rij in gevonden_pizzanaam: #voor elke rij dat de query oplevert
@@ -36,7 +36,7 @@ def zoekPizzanaam():
 
 def toonMenuInListbox():
     listboxMenu.delete(0, END) #maak de listbox leeg
-    pizza_tabel = MCPizzeriaSQL.vraagOpGegevensPizzaTabel()
+    pizza_tabel = MCpizzeriaSQL.vraagOpGegevensPizzaTabel()
     for regel in pizza_tabel:
         listboxMenu.insert(END, regel) #voeg elke regel uit resultaat in listboxMenu
     listboxMenu.insert(0, "ID Gerecht Prijs")
@@ -54,7 +54,7 @@ def haalGeselecteerdeRijOp(event):
 
 def toonWinkelwagenInListbox():
     listboxWinkelwagen.delete(0, END),  #maak de listbox leeg
-    winkelWagen_tabel = MCPizzeriaSQL.vraagOpGegevensWinkelWagenTabel
+    winkelWagen_tabel = MCpizzeriaSQL.vraagOpGegevensWinkelWagenTabel
     for regel in winkelWagen_tabel:
         listboxWinkelwagen.insert(END, regel)   #voeg elke regel uit resultaat in listboxWinkelwagen
 
@@ -65,8 +65,8 @@ def voegToeAanWinkelWagen():
     klantNr = invoerveldKlantNr.get()
     gerechtID = ingevoerde_pizzanaam.get()
     aantal = aantalGekozen.get()
-    MCPizzeriaSQL.voegToeAanWinkelWagen(klantNr, gerechtID, aantal )
-    winkelwagen_tabel = MCPizzeriaSQL.vraagOpGegevensWinkelWagenTabel()
+    MCpizzeriaSQL.voegToeAanWinkelWagen(klantNr, gerechtID, aantal )
+    winkelwagen_tabel = MCpizzeriaSQL.vraagOpGegevensWinkelWagenTabel()
     listboxWinkelwagen.delete(0, END) #listbox eerst even leeg maken
     for regel in winkelwagen_tabel:
         listboxWinkelwagen.insert(END, regel)
@@ -78,7 +78,7 @@ def voegToeAanWinkelWagen():
 
 venster = Tk()
 venster.iconbitmap("MC_icon.ico")
-venster.wm_title("MC Pizzeria")
+venster.wm_title("Po Zeeslag")
 
 labelIntro = Label(venster, text="Welkom!")
 labelIntro.grid(row=0, column=0, sticky="W")
