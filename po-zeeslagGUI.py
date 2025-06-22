@@ -17,9 +17,12 @@ def maakBord():
     invoer = input("Hoe hoog wil je het bord hebben?")
     hoogte = int(invoer)                        # zet de input om in een integer
     print(hoogte)
-    rij = [" - "*breedte]                       #maakt een rij met juiste aantal kolommen
+    rij = []
+    for x in range(breedte):
+        rij.append(" - ")
+    # rij = [" - "*breedte]                       #maakt een rij met juiste aantal kolommen
     for y in range(hoogte):
-        bord = rij * hoogte                   #zet deze rij zovaal in het bord als je rijen wilt
+        bord = [rij] * hoogte                   #zet deze rij zovaal in het bord als je rijen wilt
     return bord, breedte, hoogte
 
 def toonBord(hoogte, breedte):
@@ -57,8 +60,8 @@ def toonBord(hoogte, breedte):
 #     return p
 
 
-def plaatsSchepen(bord, breedte, hoogte):
-    bord[random.choice(hoogte)][random.choice(breedte)] = "0"
+def plaatsSchepen(bord):
+    bord[2][2] = "W"
     return bord
 
 # def vraagSpelerOmCoordinaten():
@@ -69,17 +72,17 @@ def plaatsSchepen(bord, breedte, hoogte):
 ### HOOFDPROGRAMMA ###
 
 #maak een leeg bord
-# invoer = input("Hoe breedt wil je het bord hebben?")
-# breedte = int(invoer)       # zet de input om in een integer
-# print(breedte)
-# invoer = input("Hoe hoog wil je het bord hebben?")
-# hoogte = int(invoer)        # zet de input om in een integer
-# print(hoogte)
 bord, breedte, hoogte = maakBord()
+# breedte = int(breedteStr)
+# hoogte = int(hoogteStr)
 
 #vul bord met willekeurige schepen
 print(bord)
-# plaatsSchepen(bord, breedte, hoogte)
+#plaatsSchepen(bord)                    #
+# Y = random.randint(0,3)                 #
+# X = random.randint(0,3)                 ##DOET HET NIET!!##
+# bord[Y][X] = "0"                        ##
+# print(bord)
 #toon bord met schepen op het scherm
 
 #zolang spel niet is afgelopen, doe dan:
