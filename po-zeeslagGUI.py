@@ -19,8 +19,7 @@ def maakBord():
     print(hoogte)
     rij = []
     for x in range(breedte):
-        rij.append(" - ")
-    # rij = [" - "*breedte]                       #maakt een rij met juiste aantal kolommen
+        rij.append(" - ")                     #maakt een rij met juiste aantal kolommen
     for y in range(hoogte):
         bord = [rij] * hoogte                   #zet deze rij zovaal in het bord als je rijen wilt
     return bord, breedte, hoogte
@@ -35,33 +34,12 @@ def toonBord(hoogte, breedte):
             print(bord[x][y], end="")
         print()
 
-# def plaatsSchepen(rij1, rij2, rij3):
-#     for i in rij1:
-#         for i in rij2:
-#             for i in rij3:
-#                 p = random.choice(i)
-#                 print(rij1[0:p])
-#                 print(rij2[0:p])
-#                 print(rij3[0:p])
-#     for i in rij1:
-#         for i in rij2:
-#             for i in rij3:
-#                 p = random.choice(i)
-#                 print(rij1[1:p])
-#                 print(rij2[0:p])
-#                 print(rij3[0:p])
-#     for i in rij1:
-#         for i in rij2:
-#             for i in rij3:
-#                 p = random.choice(i)
-#                 print(rij1[1:p])
-#                 print(rij2[0:p])
-#                 print(rij3[0:p])
-#     return p
-
-
 def plaatsSchepen(bord):
-    bord[2][2] = "W"
+    Y = random.randint(0,3)       
+    X = random.randint(0,3)          
+    print(Y)
+    print(X)
+    bord[Y][X] = " 0 "
     return bord
 
 # def vraagSpelerOmCoordinaten():
@@ -78,18 +56,14 @@ bord, breedte, hoogte = maakBord()
 
 #vul bord met willekeurige schepen
 print(bord)
-#plaatsSchepen(bord)                    #
-# Y = random.randint(0,3)                 #
-# X = random.randint(0,3)                 ##DOET HET NIET!!##
-# bord[Y][X] = "0"                        ##
-# print(bord)
+plaatsSchepen(bord)
+print(bord)
 #toon bord met schepen op het scherm
 
 #zolang spel niet is afgelopen, doe dan:
 while spelAfgelopen == False:
     #vraag speler om invoer
     invoer = input("Voer een coordinaat in")
-    print(invoer)
     #tel poging
     #verwerk schot: controleer of raak/mis, vertel gebruiker, pas bord aan
     #toon bord met schepen op het scherm
