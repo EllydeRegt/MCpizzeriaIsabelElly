@@ -17,7 +17,7 @@ def maakBord():
     invoer = input("Hoe hoog wil je het bord hebben?")
     hoogte = int(invoer)                        # zet de input om in een integer
     print(hoogte)
-    rij = ["-"*breedte]                       #maakt een rij met juiste aantal kolommen
+    rij = [" - "*breedte]                       #maakt een rij met juiste aantal kolommen
     for y in range(hoogte):
         bord = rij * hoogte                   #zet deze rij zovaal in het bord als je rijen wilt
     return bord, breedte, hoogte
@@ -26,10 +26,10 @@ def toonBord(hoogte, breedte):
     for kolom in range(breedte):
         print(" ", chr(65+kolom), end="")       #spatie en dan de letters boven het bord
     print()                                     #vanaf hier een enter en verder met het bord
-    for rij in range(hoogte):
-        print(1 + rij, end="")                  #de cijfers langs het bord
-        for kolom in range(breedte):
-            print(bord[rij][kolom], end="")
+    for x in range(hoogte):
+        print(1 + x, end="")                  #de cijfers langs het bord(index 0 wordt cijfer 1)
+        for y in range(breedte):
+            print(bord[x][y], end="")
         print()
 
 # def plaatsSchepen(rij1, rij2, rij3):
