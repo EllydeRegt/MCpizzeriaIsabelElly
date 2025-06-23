@@ -40,10 +40,22 @@ def plaatsSchepen(bord, breedte, hoogte):
     while schepen_geplaatst < 3:
         Y = random.randint(0,(hoogte - 1))       # kiest een random Y-coordinaat
         X = random.randint(0,(breedte - 1))      # kiest een random X-coordinaat
-        if bord[Y][X] == " - ":                    # zorgt ervoor dat alleen een schip wordt geplaatst waar nog geen schip ligt
+        schepen_omheen = geenSchepenRond(bord, Y, X)
+        if (bord[Y][X] == " - ") and (schepen_omheen == False):                    # zorgt ervoor dat alleen een schip wordt geplaatst waar nog geen schip ligt
             bord[Y][X] = " 0 "
             schepen_geplaatst += 1
     return bord
+
+def geenSchepenRond(bord, Y, X):
+    schepen_omheen = False
+    for dy in range(-1,1):
+        naastY = Y + dy
+        for dx in range(-1,1):
+            naastX = X + dx
+    if bord[naastY][naastX] == " 0 ":
+        schepen_omheen = True
+    return schepen_omheen
+
 
 def vraagSpelerOmCoordinaten():
     invoerX = input("Voer een letter in (de X-coordinaat)")
@@ -68,6 +80,7 @@ def controleer_Xcoordinaat(invoer):
         print('gok is een letter')
         invoer = invoer.upper()                         # maakt van de invoer hoofdletters
     return invoer
+
 
 # def verwerkSchot():
 #     bord.replace(bord[][], )
