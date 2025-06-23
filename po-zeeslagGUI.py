@@ -43,18 +43,20 @@ def plaatsSchepen(bord, breedte, hoogte):
     bord[Y][X] = " 0 "                          ##WERKT NOG NIET, GEEFT HELE RIJ " 0 "
     return bord
 
-def vraagSpelerOmCoordinaten(aantalPogingen):
+def vraagSpelerOmCoordinaten():
     invoerX = input("Voer een letter in (de X-coordinaat)")
     invoerX = controleer_Xcoordinaat(invoerX)       #roept functie aan die controleert of letter is en hoofdletter maakt
     X_coordinaat = ord(invoerX) - 65
     invoerY = input("Voer een cijfer in (de Y-coordinaat)")
     Y_coordinaat = int(invoerY) - 1
-    print("Je hebt ingevoerd: (", invoerX, invoerY, ")")
-    ingevulde_coordinaat = []                       # zet de coordinaat in een lijst als [X_coordinaat, Y_coordinaat]
-    ingevulde_coordinaat.append(X_coordinaat)
-    ingevulde_coordinaat.append(Y_coordinaat)
-    aantalPogingen += 1
-    return aantalPogingen, ingevulde_coordinaat
+    if (Y_coordinaat > len(bord)) or (X_coordinaat > len(bord[0])): # controleert of de coordinaten op het bord liggen
+        print("Sorry, deze coordinaten liggen niet op het bord")
+    else:
+        print("Je hebt ingevoerd: (", invoerX, invoerY, ")")
+        ingevulde_coordinaat = []                       # zet de coordinaat in een lijst als [X_coordinaat, Y_coordinaat]
+        ingevulde_coordinaat.append(X_coordinaat)
+        ingevulde_coordinaat.append(Y_coordinaat)
+    return ingevulde_coordinaat
 
 def controleer_Xcoordinaat(invoer):
     geldige_coordinaat = invoer.isalpha()           # .isalpha() is een boolean die controleert of het letters uit het alphabet zijn
@@ -62,10 +64,7 @@ def controleer_Xcoordinaat(invoer):
         print('Dit is geen letter, voer een letter in')
     else:
         print('gok is een letter')
-    invoer = invoer.upper()                         # maakt van de invoer hoofdletters
-    # hoofdlettercheck = invoer.isupper()		        # .isupper() checkt of de letter een hoofdletter is
-    # if hoofdlettercheck == False:			        # als de gok een kleine letteris, wisselt hij deze om voor een hoofdletter
-    #     invoer = invoer.swapcase()	                # .swapcase() wisselt kleine letters om voor hoofdletters en andersom
+        invoer = invoer.upper()                         # maakt van de invoer hoofdletters
     return invoer
 
 # def verwerkSchot():
@@ -89,7 +88,7 @@ toonBord(hoogte, breedte)
 #zolang spel niet is afgelopen, doe dan:
 while spelAfgelopen == False:
     #vraag speler om invoer
-    aantalPogingen, ingevulde_coordinaat = vraagSpelerOmCoordinaten(aantalPogingen)
+    ingevulde_coordinaat = vraagSpelerOmCoordinaten()
     print("ingevulde_coordinaat:", ingevulde_coordinaat)
     #tel poging
     print("Aantal pogingen gedaan:", aantalPogingen)
