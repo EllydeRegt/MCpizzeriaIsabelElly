@@ -17,11 +17,12 @@ def maakBord():
     invoer = input("Hoe hoog wil je het bord hebben?")
     hoogte = int(invoer)                        # zet de input om in een integer
     print("hoogte", hoogte)
-    rij = []
-    for x in range(breedte):
-        rij.append(" - ")                       #maakt een rij met juiste aantal kolommen
+    bord = []
     for y in range(hoogte):
-        bord = [rij] * hoogte                   #zet deze rij zovaak in het bord als je rijen wilt
+        rij = []
+        for x in range(breedte):
+            rij.append(" - ")  
+        bord.append(rij)                     #maakt een rij met juiste aantal kolommen
     return bord, breedte, hoogte
 
 def toonBord(hoogte, breedte):
@@ -34,9 +35,9 @@ def toonBord(hoogte, breedte):
             print(bord[x][y], end="")
         print()
 
-def plaatsSchepen(bord):
-    Y = random.randint(0,3)       
-    X = random.randint(0,3)          
+def plaatsSchepen(bord, breedte, hoogte):
+    Y = random.randint(0,(hoogte - 1))       
+    X = random.randint(0,(breedte - 1))     
     print("Y", Y)
     print("X", X)
     bord[Y][X] = " 0 "                          ##WERKT NOG NIET, GEEFT HELE RIJ " 0 "
@@ -47,9 +48,9 @@ def vraagSpelerOmCoordinaten(aantalPogingen):
     invoerX = controleer_Xcoordinaat(invoerX)       #roept functie aan die controleert of letter is en hoofdletter maakt
     X_coordinaat = ord(invoerX) - 65
     invoerY = input("Voer een cijfer in (de Y-coordinaat)")
-    Y_coordinaat = int(invoerY)
+    Y_coordinaat = int(invoerY) - 1
     print("Je hebt ingevoerd: (", invoerX, invoerY, ")")
-    ingevulde_coordinaat = []
+    ingevulde_coordinaat = []                       # zet de coordinaat in een lijst als [X_coordinaat, Y_coordinaat]
     ingevulde_coordinaat.append(X_coordinaat)
     ingevulde_coordinaat.append(Y_coordinaat)
     aantalPogingen += 1
@@ -61,12 +62,14 @@ def controleer_Xcoordinaat(invoer):
         print('Dit is geen letter, voer een letter in')
     else:
         print('gok is een letter')
-    hoofdlettercheck = invoer.isupper()		        # .isupper() checkt of de letter een hoofdletter is
-    if hoofdlettercheck == False:			        # als de gok een kleine letteris, wisselt hij deze om voor een hoofdletter
-        invoer = invoer.swapcase()	                # .swapcase() wisselt kleine letters om voor hoofdletters en andersom
+    invoer = invoer.upper()                         # maakt van de invoer hoofdletters
+    # hoofdlettercheck = invoer.isupper()		        # .isupper() checkt of de letter een hoofdletter is
+    # if hoofdlettercheck == False:			        # als de gok een kleine letteris, wisselt hij deze om voor een hoofdletter
+    #     invoer = invoer.swapcase()	                # .swapcase() wisselt kleine letters om voor hoofdletters en andersom
     return invoer
 
 # def verwerkSchot():
+#     bord.replace(bord[][], )
 
 
 ### HOOFDPROGRAMMA ###
@@ -78,7 +81,7 @@ bord, breedte, hoogte = maakBord()
 
 #vul bord met willekeurige schepen
 print(bord)
-bord = plaatsSchepen(bord)
+bord = plaatsSchepen(bord, breedte, hoogte)
 print(bord)
 toonBord(hoogte, breedte)
 #toon bord met schepen op het scherm
