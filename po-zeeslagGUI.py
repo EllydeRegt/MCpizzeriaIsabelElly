@@ -36,11 +36,13 @@ def toonBord(hoogte, breedte):
         print()
 
 def plaatsSchepen(bord, breedte, hoogte):
-    Y = random.randint(0,(hoogte - 1))       
-    X = random.randint(0,(breedte - 1))     
-    print("Y", Y)
-    print("X", X)
-    bord[Y][X] = " 0 "                          ##WERKT NOG NIET, GEEFT HELE RIJ " 0 "
+    schepen_geplaatst = 0
+    while schepen_geplaatst < 3:
+        Y = random.randint(0,(hoogte - 1))       # kiest een random Y-coordinaat
+        X = random.randint(0,(breedte - 1))      # kiest een random X-coordinaat
+        if bord[Y][X] == " - ":                    # zorgt ervoor dat alleen een schip wordt geplaatst waar nog geen schip ligt
+            bord[Y][X] = " 0 "
+            schepen_geplaatst += 1
     return bord
 
 def vraagSpelerOmCoordinaten():
@@ -53,9 +55,9 @@ def vraagSpelerOmCoordinaten():
         print("Sorry, deze coordinaten liggen niet op het bord")
     else:
         print("Je hebt ingevoerd: (", invoerX, invoerY, ")")
-        ingevulde_coordinaat = []                       # zet de coordinaat in een lijst als [X_coordinaat, Y_coordinaat]
-        ingevulde_coordinaat.append(X_coordinaat)
-        ingevulde_coordinaat.append(Y_coordinaat)
+    ingevulde_coordinaat = []                       # zet de coordinaat in een lijst als [X_coordinaat, Y_coordinaat]
+    ingevulde_coordinaat.append(X_coordinaat)
+    ingevulde_coordinaat.append(Y_coordinaat)
     return ingevulde_coordinaat
 
 def controleer_Xcoordinaat(invoer):
