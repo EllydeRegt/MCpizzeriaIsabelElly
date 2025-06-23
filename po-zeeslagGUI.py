@@ -21,7 +21,7 @@ def maakBord():
     for x in range(breedte):
         rij.append(" - ")                       #maakt een rij met juiste aantal kolommen
     for y in range(hoogte):
-        bord = [rij] * hoogte                   #zet deze rij zovaal in het bord als je rijen wilt
+        bord = [rij] * hoogte                   #zet deze rij zovaak in het bord als je rijen wilt
     return bord, breedte, hoogte
 
 def toonBord(hoogte, breedte):
@@ -39,17 +39,21 @@ def plaatsSchepen(bord):
     X = random.randint(0,3)          
     print("Y", Y)
     print("X", X)
-    bord[Y][X] = " 0 "
+    bord[Y][X] = " 0 "                          ##WERKT NOG NIET, GEEFT HELE RIJ " 0 "
     return bord
 
-def vraagSpelerOmCoordinaten():
+def vraagSpelerOmCoordinaten(aantalPogingen):
     invoerX = input("Voer een letter in (de X-coordinaat)")
-    invoerX = controleer_Xcoordinaat(invoerX)
+    invoerX = controleer_Xcoordinaat(invoerX)       #roept functie aan die controleert of letter is en hoofdletter maakt
     X_coordinaat = ord(invoerX) - 65
     invoerY = input("Voer een cijfer in (de Y-coordinaat)")
     Y_coordinaat = int(invoerY)
     print("Je hebt ingevoerd: (", invoerX, invoerY, ")")
-    return X_coordinaat, Y_coordinaat
+    ingevulde_coordinaat = []
+    ingevulde_coordinaat.append(X_coordinaat)
+    ingevulde_coordinaat.append(Y_coordinaat)
+    aantalPogingen += 1
+    return aantalPogingen, ingevulde_coordinaat
 
 def controleer_Xcoordinaat(invoer):
     geldige_coordinaat = invoer.isalpha()           # .isalpha() is een boolean die controleert of het letters uit het alphabet zijn
@@ -82,10 +86,10 @@ toonBord(hoogte, breedte)
 #zolang spel niet is afgelopen, doe dan:
 while spelAfgelopen == False:
     #vraag speler om invoer
-    X_coordinaat, Y_coordinaat = vraagSpelerOmCoordinaten()
-    print("X:", X_coordinaat)
-    print("Y:", Y_coordinaat)
+    aantalPogingen, ingevulde_coordinaat = vraagSpelerOmCoordinaten(aantalPogingen)
+    print("ingevulde_coordinaat:", ingevulde_coordinaat)
     #tel poging
+    print("Aantal pogingen gedaan:", aantalPogingen)
     #verwerk schot: controleer of raak/mis, vertel gebruiker, pas bord aan
     #toon bord met schepen op het scherm
     toonBord(hoogte, breedte)
