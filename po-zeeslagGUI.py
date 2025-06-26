@@ -37,39 +37,56 @@ def toonBord(hoogte, breedte):
 
 def plaatsSchepen(bord, breedte, hoogte):
     schepen_geplaatst = 0
+    hokjes_gevuld = 0
     lengte_schip = 3
     richting = ["horizontaal", "verticaal"]
     while schepen_geplaatst < 2:
         richting = random.choice(richting)      # kiest een random richting
+        print("richting:", richting)
         if richting == "horizontaal":
             Y = [random.randint(0,(hoogte - 1))]                      # kiest een random Y-coordinaat
+            print("Y:", Y)
             X = [random.randint(0,(breedte - lengte_schip))]          # kiest een random X-coordinaat
+            print("X:", X)
             for i in range(lengte_schip):
-                X.append(X[-1] + 1)             # X[-1] refereert naar het laatste item in de lijst
-            #     vakjes = [Y, X + i]
+                volgende_X = X[-1] + 1
+                X.append(volgende_X)             # X[-1] refereert naar het laatste item in de lijst
+                print("volgende_X", volgende_X)   
+                print("X na append:", X)         
+                #     vakjes = [Y, X + i]
         else:                                                       # anders (als verticaal)
             Y = [random.randint(0, (hoogte - lengte_schip))]
+            print("Y:", Y)
             X = [random.randint(0,(breedte - 1))]
-
-            for i in range(lengte_schip):
-                Y.append(Y[-1] + 1)             # Y[-1] refereert naar het laatste item in de lijst
-            
+            print("X:", X)
+            for i in range(lengte_schip - 1):
+                volgende_Y = Y[-1] + 1
+                Y.append(volgende_Y)             # Y[-1] refereert naar het laatste item in de lijst
+                print("volgende_Y", volgende_Y)   
+                print("Y na append:", Y) 
+    
         aantal_vrije_vakjes = 0
             # schepen_omheen = geenSchepenRond(bord, Y, X)
         for y in Y:
+            print("y:", y)
             for x in X:
+                print("x", x)
+                print(bord[y][x])
                 if bord[y][x] == " - ": # and schepen_omheen == False:
                     aantal_vrije_vakjes += 1
+                    print(aantal_vrije_vakjes)
 
         if aantal_vrije_vakjes == lengte_schip:
             for y in Y:
                 for x in X:
+                    print("bord[y][x] = ", bord[y][x])
                     bord[y][x] = " 0 "
-            schepen_geplaatst += 1
-
-            # if (bord[Y][X] == " - ") and (schepen_omheen == False):     # zorgt ervoor dat alleen een schip wordt geplaatst waar nog geen schip ligt
-            #     bord[Y][X] = " 0 "
-            #     schepen_geplaatst += 1
+                    hokjes_gevuld += 1
+                    print(hokjes_gevuld)
+        schepen_geplaatst += 1
+        # if (bord[Y][X] == " - ") and (schepen_omheen == False):     # zorgt ervoor dat alleen een schip wordt geplaatst waar nog geen schip ligt
+        #     bord[Y][X] = " 0 "
+        #     schepen_geplaatst += 1
     return bord
 
 def geenSchepenRond(bord, Y, X):
