@@ -11,12 +11,14 @@ aantalPogingen = 0
 ### FUNCTIEDEFINITIE ###
 
 def maakBord():
-    invoer = input("Hoe breedt wil je het bord hebben?")
-    breedte = int(invoer)                       # int() zet de input om in een integer
-    print("breedte:", breedte)
-    invoer = input("Hoe hoog wil je het bord hebben?")
-    hoogte = int(invoer)                        # zet de input om in een integer
-    print("hoogte", hoogte)
+    # invoer = input("Hoe breedt wil je het bord hebben?")
+    # breedte = int(invoer)                       # int() zet de input om in een integer
+    # print("breedte:", breedte)
+    # invoer = input("Hoe hoog wil je het bord hebben?")
+    # hoogte = int(invoer)                        # zet de input om in een integer
+    # print("hoogte", hoogte)
+    breedte = 10
+    hoogte = 10
     bord = []
     for y in range(hoogte):
         rij = []
@@ -37,33 +39,27 @@ def toonBord(hoogte, breedte):
 
 def plaatsSchepen(bord, breedte, hoogte):
     schepen_geplaatst = 0
-    hokjes_gevuld = 0
     lengte_schip = 2
-    #richting = [1, 2]
+    richtingen = ["verticaal", "horizontaal"]
     while schepen_geplaatst < 4:
-        richting = random.randint(1,2)      # kiest een random richting
+        richting = random.choice(richtingen)    # kiest een random richting
         print("richting:", richting)
-        if richting == 1:
+        if richting == "horizontaal":
             Y = [random.randint(0,(hoogte - 1))]                      # kiest een random Y-coordinaat
             X = [random.randint(0,(breedte - lengte_schip))]          # kiest een random X-coordinaat
-            for i in range(lengte_schip):
-                volgende_X = X[-1] + 1
-                X.append(volgende_X)             # X[-1] refereert naar het laatste item in de lijst       
-        elif richting == 2:                                                       # anders (als verticaal)
+            for i in range(lengte_schip - 1):   # -1 omdat er al 1 waarde in de lijst staat
+                volgende_X = X[-1] + 1          # X[-1] refereert naar het laatste item in de lijst
+                X.append(volgende_X)
+        elif richting == "verticaal":                                 # anders (dan verticaal)
             Y = [random.randint(0, (hoogte - lengte_schip))]
             X = [random.randint(0,(breedte - 1))]
-            for i in range(lengte_schip - 1):
-                volgende_Y = Y[-1] + 1
-                Y.append(volgende_Y)             # Y[-1] refereert naar het laatste item in de lijst 
+            for i in range(lengte_schip - 1):   # -1 omdat er al 1 waarde in de lijst staat
+                volgende_Y = Y[-1] + 1          # Y[-1] refereert naar het laatste item in de lijst
+                Y.append(volgende_Y)
     
-        aantal_vrije_vakjes = 0
-        schepen_omheen = geenSchepenRond(bord, Y, X)
-        for y in Y:
-            for x in X:
-                if schepen_omheen == False:
-                    aantal_vrije_vakjes += 1
-
-        if aantal_vrije_vakjes == lengte_schip:                     # Als alle benodigde hokjes vrij zijn
+        # lijst met coordinaten gemaakt, nu controleren of correct en schip plaatsen
+        schepen_omheen = geenSchepenRond(bord, Y, X, hoogte, breedte)
+        if schepen_omheen == False:
             for y in Y:
                 for x in X:
                     bord[y][x] = " 0 "
@@ -71,7 +67,7 @@ def plaatsSchepen(bord, breedte, hoogte):
             lengte_schip += 1
     return bord
 
-def geenSchepenRond(bord, Y, X):
+def geenSchepenRond(bord, Y, X, hoogte, breedte):
     schepen_omheen = False
     for y in Y:
         for i in range(-1, 2):
@@ -82,26 +78,7 @@ def geenSchepenRond(bord, Y, X):
                     if (0 <= dy and dy < hoogte) and (0 <= dx and dx < breedte):
                         if bord[dy][dx] == " 0 ":
                             schepen_omheen = True
-
-            # for dy in range(-1, 2):
-            #     print("dy:", dy)
-            #     for dx in range(-1, 2):
-            #         print("dx:", dx)
-            #         if bord[dy][dx] == " 0 ":
-            #             schepen_omheen = True
     return schepen_omheen
-            
-
-# def geenSchepenRond(bord, Y, X):
-#     schepen_omheen = False
-#     for dy in range(-1, 2):
-#         naastY = Y + dy
-#         for dx in range(-1, 2):
-#             naastX = X + dx
-#             if (0 <= naastY and naastY < hoogte) and (0 <= naastX and naastX < breedte):    #zorgt dat er geen foutmelding komt aan de rand van het bord
-#                 if bord[naastY][naastX] == " 0 ":
-#                     schepen_omheen = True
-#     return schepen_omheen
 
 
 def vraagSpelerOmCoordinaten(aantalPogingen):
@@ -180,9 +157,7 @@ leegBord = bord
 # hoogte = int(hoogteStr)
 
 #vul bord met willekeurige schepen
-print(bord)
 bord = plaatsSchepen(bord, breedte, hoogte)
-print(bord)
 toonBord(hoogte, breedte)
 #toon bord met schepen op het scherm
 
