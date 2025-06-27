@@ -27,7 +27,7 @@ def maakBord():
         bord.append(rij)                        #maakt een rij met juiste aantal kolommen
     return bord, breedte, hoogte
 
-def toonBord(hoogte, breedte):
+def toonBord(bord, hoogte, breedte):
     for kolom in range(breedte):
         print(" ", chr(65+kolom), end="")       #spatie en dan de letters boven het bord
     print()                                     #vanaf hier een enter en verder met het bord
@@ -43,7 +43,6 @@ def plaatsSchepen(bord, breedte, hoogte):
     richtingen = ["verticaal", "horizontaal"]
     while schepen_geplaatst < 4:
         richting = random.choice(richtingen)    # kiest een random richting
-        print("richting:", richting)
         if richting == "horizontaal":
             Y = [random.randint(0,(hoogte - 1))]                      # kiest een random Y-coordinaat
             X = [random.randint(0,(breedte - lengte_schip))]          # kiest een random X-coordinaat
@@ -57,7 +56,7 @@ def plaatsSchepen(bord, breedte, hoogte):
                 volgende_Y = Y[-1] + 1          # Y[-1] refereert naar het laatste item in de lijst
                 Y.append(volgende_Y)
     
-        # lijst met coordinaten gemaakt, nu controleren of correct en schip plaatsen
+        # lijsten met coordinaten gemaakt, nu controleren of vrij en schip plaatsen
         schepen_omheen = geenSchepenRond(bord, Y, X, hoogte, breedte)
         if schepen_omheen == False:
             for y in Y:
@@ -69,15 +68,24 @@ def plaatsSchepen(bord, breedte, hoogte):
 
 def geenSchepenRond(bord, Y, X, hoogte, breedte):
     schepen_omheen = False
+
     for y in Y:
-        for i in range(-1, 2):
-            dy = y + i
-            for x in X:
-                for i in range(-1, 2):
-                    dx = x + i
+        for x in X:
+            for dy in range(y-1, y + 2):
+                for dx in range(x-1, x + 2):
                     if (0 <= dy and dy < hoogte) and (0 <= dx and dx < breedte):
                         if bord[dy][dx] == " 0 ":
                             schepen_omheen = True
+
+    # for y in Y:
+    #     for i in range(-1, 2):
+    #         dy = y + i
+    #         for x in X:
+    #             for i in range(-1, 2):
+    #                 dx = x + i
+    #                 if (0 <= dy and dy < hoogte) and (0 <= dx and dx < breedte):
+    #                     if bord[dy][dx] == " 0 ":
+    #                         schepen_omheen = True
     return schepen_omheen
 
 
@@ -85,12 +93,12 @@ def vraagSpelerOmCoordinaten(aantalPogingen):
     goeieGok = False
     geldige_Xcoordinaat = False
     geldige_Ycoordinaat = False
-    while goeieGok == False:
-        while geldige_Xcoordinaat == False:      # terwijl er nog geen geldige X-coordinaat is ingevuld blijft hij ernaar vragen
+    while goeieGok == False:                    # terwijl er nog geen geldige gok is gedaan blijft hij ernaar vragen
+        while geldige_Xcoordinaat == False:     # terwijl er nog geen geldige X-coordinaat is ingevuld blijft hij ernaar vragen
             invoerX = input("Voer een letter in (de X-coordinaat)").strip()             # .strip() haalt onoidge spaties voor en achter de invoer weg
             invoerX, geldige_Xcoordinaat = controleer_Xcoordinaat(invoerX)              #roept functie aan die controleert of letter is en hoofdletter maakt
         X_coordinaat = ord(invoerX) - 65
-        while geldige_Ycoordinaat == False:      # terwijl er nog geen geldige Y-coordinaat is ingevuld blijft hij ernaar vragen
+        while geldige_Ycoordinaat == False:     # terwijl er nog geen geldige Y-coordinaat is ingevuld blijft hij ernaar vragen
             invoerY = input("Voer een cijfer in (de Y-coordinaat)").strip()             # .strip() haalt onodige spaties voor en achter de invoer weg
             invoerY, geldige_Ycoordinaat = controleer_Ycoordinaat(invoerY)              #roept functie aan die controleert of cijfer is    
         Y_coordinaat = int(invoerY) - 1
@@ -126,24 +134,28 @@ def controleer_Ycoordinaat(invoer):
     if geldige_Ycoordinaat == False:
         print("Dit is geen geldig getal, voer een getal in")
     else:
-        if len(invoer) > 1:                      # controleert of de invoer 1 teken is 
-            print("Dit is meer dan 1 getal, voer 1 getal in")
-            geldige_Ycoordinaat = False
-        else:
+        # if len(invoer) > 1 and invoer != 10:                      # controleert of de invoer 1 teken is 
+        #     print("Dit is meer dan 1 getal, voer 1 getal in")
+        #     geldige_Ycoordinaat = False
+        # else:
             print('gok is een getal')
             geldige_Ycoordinaat = True
     return invoer, geldige_Ycoordinaat
 
-def verwerkSchot(bord, ingevulde_coordinaat, leegBord):
+def verwerkSchot(bord, ingevulde_coordinaat, speelBord):
     Y = ingevulde_coordinaat[1]
     X = ingevulde_coordinaat[0]
     if bord[Y][X] == " 0 ":                        # als er op de ingevulde coordinaat een "0" ligt (een schip)
         print("Raak! Op deze coordinaat lag een schip!")
-        leegBord[Y][X] = " 0 "
+        speelBord[Y][X] = " 0 "
     else: 
         print("Helaas!, dit was mis, probeer opnieuw!")
-        leegBord[Y][X] = " / "
-    return leegBord
+        speelBord[Y][X] = " / "
+    # for y in range(9):
+    #     for x in range(9):
+    #         if speelBord[y][x] == bord[y][x]:
+    #             print("Hoera! Alle schepen zijn gezonken")
+    return speelBord
 
 
 
@@ -152,26 +164,25 @@ def verwerkSchot(bord, ingevulde_coordinaat, leegBord):
 
 #maak een leeg bord
 bord, breedte, hoogte = maakBord()
-leegBord = bord
+speelBord, breedte, hoogte = maakBord()
 # breedte = int(breedteStr)
 # hoogte = int(hoogteStr)
 
 #vul bord met willekeurige schepen
 bord = plaatsSchepen(bord, breedte, hoogte)
-toonBord(hoogte, breedte)
+toonBord(speelBord, hoogte, breedte)
 #toon bord met schepen op het scherm
 
 #zolang spel niet is afgelopen, doe dan:
 while spelAfgelopen == False:
     #vraag speler om invoer
     ingevulde_coordinaat, aantalPogingen = vraagSpelerOmCoordinaten(aantalPogingen)
-    print("ingevulde_coordinaat:", ingevulde_coordinaat)
     #tel poging
     print("Aantal pogingen gedaan:", aantalPogingen)
     #verwerk schot: controleer of raak/mis, vertel gebruiker, pas bord aan
-    verwerkSchot(bord, ingevulde_coordinaat, leegBord)
+    verwerkSchot(bord, ingevulde_coordinaat, speelBord)
     #toon bord met schepen op het scherm
-    toonBord(hoogte, breedte)
+    toonBord(speelBord, hoogte, breedte)
 
 #spel afgelopen: geef gebruiker een compliment
 if spelAfgelopen == True:
