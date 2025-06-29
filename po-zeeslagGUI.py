@@ -37,11 +37,12 @@ def toonBord(bord, hoogte, breedte):
             print(bord[x][y], end="")
         print()
 
-def plaatsSchepen(bord, breedte, hoogte):
-    schepen_geplaatst = 0
-    lengte_schip = 2
+#############TEST#####TEST#############TEST#############TEST
+
+def plaatsSchip(bord, breedte, hoogte, lengte_schip):
     richtingen = ["verticaal", "horizontaal"]
-    while schepen_geplaatst < 4:
+    schip_geplaatst = False
+    while schip_geplaatst == False:
         richting = random.choice(richtingen)    # kiest een random richting
         if richting == "horizontaal":
             Y = [random.randint(0,(hoogte - 1))]                      # kiest een random Y-coordinaat
@@ -49,22 +50,61 @@ def plaatsSchepen(bord, breedte, hoogte):
             for i in range(lengte_schip - 1):   # -1 omdat er al 1 waarde in de lijst staat
                 volgende_X = X[-1] + 1          # X[-1] refereert naar het laatste item in de lijst
                 X.append(volgende_X)
-        elif richting == "verticaal":                                 # anders (dan verticaal)
-            Y = [random.randint(0, (hoogte - lengte_schip))]
+            Y = Y * len(X)
+        elif richting == "verticaal":
+            Y = [random.randint(0,(hoogte - lengte_schip))]
             X = [random.randint(0,(breedte - 1))]
             for i in range(lengte_schip - 1):   # -1 omdat er al 1 waarde in de lijst staat
                 volgende_Y = Y[-1] + 1          # Y[-1] refereert naar het laatste item in de lijst
                 Y.append(volgende_Y)
-    
+            X = X * len(Y)
         # lijsten met coordinaten gemaakt, nu controleren of vrij en schip plaatsen
         schepen_omheen = geenSchepenRond(bord, Y, X, hoogte, breedte)
         if schepen_omheen == False:
             for y in Y:
                 for x in X:
                     bord[y][x] = " 0 "
-            schepen_geplaatst += 1
-            lengte_schip += 1
-    return bord
+            schip_geplaatst = True
+    return bord, Y, X
+
+
+# coordinatenSchip = []
+# for i in X:
+#     coordinaat = []
+#     coordinaat.append(X[i], Y[i])
+
+
+
+##########################################
+
+# def plaatsSchepen(bord, breedte, hoogte):
+#     schepen_geplaatst = 0
+#     lengte_schip = 2
+#     richtingen = ["verticaal", "horizontaal"]
+#     while schepen_geplaatst < 4:
+#         richting = random.choice(richtingen)    # kiest een random richting
+#         if richting == "horizontaal":
+#             Y = [random.randint(0,(hoogte - 1))]                      # kiest een random Y-coordinaat
+#             X = [random.randint(0,(breedte - lengte_schip))]          # kiest een random X-coordinaat
+#             for i in range(lengte_schip - 1):   # -1 omdat er al 1 waarde in de lijst staat
+#                 volgende_X = X[-1] + 1          # X[-1] refereert naar het laatste item in de lijst
+#                 X.append(volgende_X)
+#         elif richting == "verticaal":                                 # anders (dan verticaal)
+#             Y = [random.randint(0, (hoogte - lengte_schip))]
+#             X = [random.randint(0,(breedte - 1))]
+#             for i in range(lengte_schip - 1):   # -1 omdat er al 1 waarde in de lijst staat
+#                 volgende_Y = Y[-1] + 1          # Y[-1] refereert naar het laatste item in de lijst
+#                 Y.append(volgende_Y)
+    
+#         # lijsten met coordinaten gemaakt, nu controleren of vrij en schip plaatsen
+#         schepen_omheen = geenSchepenRond(bord, Y, X, hoogte, breedte)
+#         if schepen_omheen == False:
+#             for y in Y:
+#                 for x in X:
+#                     bord[y][x] = " 0 "
+#             schepen_geplaatst += 1
+#             lengte_schip += 1
+#     return bord
 
 def geenSchepenRond(bord, Y, X, hoogte, breedte):
     schepen_omheen = False
@@ -87,6 +127,40 @@ def geenSchepenRond(bord, Y, X, hoogte, breedte):
     #                     if bord[dy][dx] == " 0 ":
     #                         schepen_omheen = True
     return schepen_omheen
+
+
+def plaats_schepen(bord, breedte, hoogte):
+    bord, Y, X = plaatsSchip(bord, breedte, hoogte, 2)
+    schip1 = []
+    for i in range(len(Y)):
+        coordinaat = [Y[i], X[i]]
+        schip1.append(coordinaat)
+    print("schip1", schip1)
+    bord, Y, X = plaatsSchip(bord, breedte, hoogte, 3)
+    schip2 = []
+    for i in range(len(Y)):
+        coordinaat = [Y[i], X[i]]
+        schip2.append(coordinaat)
+    print("schip2", schip2)
+    bord, Y, X = plaatsSchip(bord, breedte, hoogte, 3)
+    schip3 = []
+    for i in range(len(Y)):
+        coordinaat = [Y[i], X[i]]
+        schip3.append(coordinaat)
+    print("schip3", schip3)
+    bord, Y, X = plaatsSchip(bord, breedte, hoogte, 4)
+    schip4 = []
+    for i in range(len(Y)):
+        coordinaat = [Y[i], X[i]]
+        schip4.append(coordinaat)
+    print("schip4", schip4)
+    bord, Y, X = plaatsSchip(bord, breedte, hoogte, 5)
+    schip5 = []
+    for i in range(len(Y)):
+        coordinaat = [Y[i], X[i]]
+        schip5.append(coordinaat)
+    print("schip5", schip5)
+    return bord, schip1, schip2, schip3, schip4, schip5
 
 
 def vraagSpelerOmCoordinaten(aantalPogingen):
@@ -157,7 +231,12 @@ def verwerkSchot(bord, ingevulde_coordinaat, speelBord):
     #             print("Hoera! Alle schepen zijn gezonken")
     return speelBord
 
-
+# def eindeSpel_controle(bord, speelBord):
+#     speelBord = speelBord.replace(" / ", " - ")
+#     if speelBord == bord:
+#         print("Je hebt gewonnen! Einde spel!")
+#         spelAfgelopen = True
+#     return spelAfgelopen
 
 
 ### HOOFDPROGRAMMA ###
@@ -169,7 +248,24 @@ speelBord, breedte, hoogte = maakBord()
 # hoogte = int(hoogteStr)
 
 #vul bord met willekeurige schepen
-bord = plaatsSchepen(bord, breedte, hoogte)
+
+# lengte_schip = 2
+# schepen_geplaatst = 0
+# # Xcoordinaten_schepen = []
+# # Ycoordinaten_schepen = []
+# while schepen_geplaatst < 4:
+#     bord, Y, X = plaatsSchip(bord, breedte, hoogte, lengte_schip)
+#     print("Y:", Y, "X:", X)
+#     # for i in range(len(X)):
+#     #     Xcoordinaten_schepen.append(X)
+#     #     Ycoordinaten_schepen.append(Y)
+#     lengte_schip += 1
+#     schepen_geplaatst += 1
+# # print("Xcoordinaten_schepen:", Xcoordinaten_schepen)
+# # print("Ycoordinaten_schepen:", Ycoordinaten_schepen)
+# bord, Y, X = plaatsSchip(bord, breedte, hoogte, 3)
+bord, schip1, schip2, schip3, schip4, schip5 = plaats_schepen(bord, breedte, hoogte)
+toonBord(bord, hoogte, breedte)
 toonBord(speelBord, hoogte, breedte)
 #toon bord met schepen op het scherm
 
@@ -180,7 +276,8 @@ while spelAfgelopen == False:
     #tel poging
     print("Aantal pogingen gedaan:", aantalPogingen)
     #verwerk schot: controleer of raak/mis, vertel gebruiker, pas bord aan
-    verwerkSchot(bord, ingevulde_coordinaat, speelBord)
+    speelBord = verwerkSchot(bord, ingevulde_coordinaat, speelBord)
+    # spelAfgelopen = eindeSpel_controle(bord, speelBord)
     #toon bord met schepen op het scherm
     toonBord(speelBord, hoogte, breedte)
 
