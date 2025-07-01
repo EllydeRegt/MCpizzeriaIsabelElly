@@ -192,11 +192,12 @@ def verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen):
         print("Raak! Op deze coordinaat lag een schip!")
         speelBord[Y][X] = " 0 "
         print("alle_schepen", alle_schepen)
-        alle_schepen.remove([Y][X])
+        for schip in alle_schepen:
+            if [Y, X] in schip:
+                schip.remove([Y, X])
+                if schip == []:
+                    print("Schip is gezonken")
         print("alle_schepen", alle_schepen)
-        for i in alle_schepen:
-            if i == []:
-                print("Schip is gezonken")
     else: 
         print("Helaas!, dit was mis, probeer opnieuw!")
         speelBord[Y][X] = " / "
@@ -206,21 +207,14 @@ def verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen):
     #             print("Hoera! Alle schepen zijn gezonken")
     return speelBord
 
-def eindeSpel_controle(speelBord, schepen):
-    schip_gezonken = True
-    print('schepen:', schepen)
-    for schip in schepen:
-        print("schip in schepen:", schip)
-        for coordinaat in schip:
-            print("coordinaat in schip:", coordinaat)
-            x = coordinaat[0]
-            print("x", x)
-            y = coordinaat[1]
-            print("y", y)
-            if speelBord[y][x] != " 0 ":
-                schip_gezonken = False
-    print("schip_gezonken:", schip_gezonken)
-    return schip_gezonken
+def eindeSpel_controle(alle_schepen, spelAfgelopen):
+    for schip in alle_schepen:
+        if schip != []:         # als er een schip is dat nog niet is gezonken (en dus nog coordinaten heeft in de lijst)
+            spelAfgelopen = False
+        else:
+            spelAfgelopen = True
+    return spelAfgelopen
+    
 
 
 
@@ -257,27 +251,26 @@ speelBord, breedte, hoogte = maakBord()
 # # print("Xcoordinaten_schepen:", Xcoordinaten_schepen)
 # # print("Ycoordinaten_schepen:", Ycoordinaten_schepen)
 # bord, Y, X = plaatsSchip(bord, breedte, hoogte, 3)
+
 bord, schip1, schip2, schip3, schip4, schip5 = plaats_schepen(bord, breedte, hoogte)
 alle_schepen = [schip1, schip2, schip3, schip4, schip5]
 toonBord(bord, hoogte, breedte)
-toonBord(speelBord, hoogte, breedte)
-#toon bord met schepen op het scherm
+toonBord(speelBord, hoogte, breedte)    #toon bord met schepen op het scherm
 
 #zolang spel niet is afgelopen, doe dan:
 while spelAfgelopen == False:
-    #vraag speler om invoer
     ingevulde_coordinaat, aantalPogingen = vraagSpelerOmCoordinaten(aantalPogingen, hoogte, breedte)
-    #tel poging
     print("Aantal pogingen gedaan:", aantalPogingen)
-    #verwerk schot: controleer of raak/mis, vertel gebruiker, pas bord aan
     speelBord = verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen)
-    #           schip_gezonken = eindeSpel_controle(bord, speelBord, alle_schepen)
-    #toon bord met schepen op het scherm
+    spelAfgelopen = eindeSpel_controle(alle_schepen, spelAfgelopen)
     toonBord(speelBord, hoogte, breedte)
 
 #spel afgelopen: geef gebruiker een compliment
 if spelAfgelopen == True:
     print("Goed gespeeld!")
+    print("Je hebt in ", aantalPogingen, "pogingen geraden waar alle schepen lagen")
+    print("Dit was hoe de schepen waren geplaatst")
+    toonBord(bord, hoogte, breedte)
 
 
 
