@@ -4,10 +4,19 @@
 ### GLOBALE VARIABELE ###
 
 import random
+import turtle
+
+turtle.hideturtle()
+turtle.pencolor("blue")     
+turtle.speed(0)             # Zet de snelheid op maximaal om snel te tekenen
+
+HOKJE = 30
+BORD_GROOTTE = 300
 
 SCHIP = " 0 "
 WATER = " - "
 MIS = " / "
+
 spelAfgelopen = False
 aantalPogingen = 0
 
@@ -26,31 +35,18 @@ def spelUitleg():
     print("Veel succes!")
 
 def maakBord():
-    # geldige_input = False
-    # while geldige_input == False:
-    #     invoer = input("Kies een moeilijkheid: 1, 2 of 3")
-    #     if invoer != "1" and invoer!= "2" and invoer!= "3":
-    #         geldige_input = False
-    #     else:
-    #         geldige_input = True
-    #         moeilijkheid = int(invoer)
-    # if moeilijkheid == 1:
-    #     breedte = 8
-    #     hoogte = 8
-    # elif moeilijkheid == 2:
-    #     breedte = 9
-    #     hoogte = 9
-    # elif moeilijkheid == 3:
     breedte = 10
     hoogte = 10
     bord = []
     for y in range(hoogte):
         rij = []
         for x in range(breedte):
-            rij.append(WATER)  
-        bord.append(rij)                        #maakt een rij met juiste aantal kolommen
+            rij.append(WATER)                   #maakt een rij met juiste aantal kolommen
+        bord.append(rij)
+    teken_bord(hoogte, breedte)
     return bord, breedte, hoogte
 
+# print het bord, nu niet meer nodig vanwege de turtle die later is toegevoegd
 def toonBord(bord, hoogte, breedte):
     for kolom in range(breedte):
         print(" ", chr(65+kolom), end="")       #spatie en dan de letters boven het bord
@@ -61,6 +57,7 @@ def toonBord(bord, hoogte, breedte):
             print(bord[x][y], end="")
         print()
 
+# plaatst een schip met een gegeven lengte op een random plek op het bord
 def plaatsSchip(bord, breedte, hoogte, lengte_schip):
     richtingen = ["verticaal", "horizontaal"]
     schip_geplaatst = False
@@ -89,6 +86,7 @@ def plaatsSchip(bord, breedte, hoogte, lengte_schip):
             schip_geplaatst = True
     return bord, Y, X
 
+# controleert of het schip geen ander schip zal raken, voordat het geplaatst wordt
 def geenSchepenRond(bord, Y, X, hoogte, breedte):
     schepen_omheen = False
     for y in Y:
@@ -105,6 +103,7 @@ def geenSchepenRond(bord, Y, X, hoogte, breedte):
 
 def plaats_schepen(bord, breedte, hoogte):
     bord, Y, X = plaatsSchip(bord, breedte, hoogte, 2)
+    teken_schip(X, Y)
     schip1 = []
     for i in range(len(Y)):
         coordinaat = [Y[i], X[i]]
@@ -141,7 +140,7 @@ def vraag_speler_om_coordinaten(aantalPogingen, hoogte, breedte):
     goeieGok = False
     geldige_X = False
     geldige_Y = False
-    while goeieGok == False:                    # terwijl er nog geen geldige gok is gedaan blijft hij ernaar vragen
+    while goeieGok == False:          # terwijl er nog geen geldige gok is gedaan blijft hij ernaar vragen
         while geldige_X == False:     # terwijl er nog geen geldige X-coordinaat is ingevuld blijft hij ernaar vragen
             invoerX = input("Voer een letter in (de X-coordinaat)").strip()             # .strip() haalt onoidge spaties voor en achter de invoer weg
             invoerX, geldige_X = controleer_X(invoerX)              #roept functie aan die controleert of letter is en hoofdletter maakt
@@ -214,13 +213,78 @@ def verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen):
         speelBord[Y][X] = MIS
     return speelBord
 
-def controleer_einde_spel(alle_schepen, spelAfgelopen):
+def controleer_einde_spel(alle_schepen):
+    spelAfgelopen = True
     for schip in alle_schepen:
         if schip != []:         # als er een schip is dat nog niet is gezonken (en dus nog coordinaten heeft in de lijst)
             spelAfgelopen = False
-        else:
-            spelAfgelopen = True
     return spelAfgelopen
+
+
+def teken_bord(hoogte, breedte):   
+    start_x = -BORD_GROOTTE / 2 
+    start_y = -BORD_GROOTTE / 2
+    for rij in range(hoogte + 1):
+        turtle.penup()
+        turtle.goto(start_x, start_y + rij * HOKJE)
+        turtle.pendown()
+        turtle.forward(BORD_GROOTTE)
+    
+    # vanaf hier de verticale lijnen
+    turtle.left(90)
+    for kolom in range(breedte + 1):
+        turtle.penup()
+        turtle.goto(start_x + kolom * HOKJE, start_y)
+        turtle.pendown()
+        turtle.forward(BORD_GROOTTE)
+    
+
+def teken_schip(X, Y):
+    start_x = -BORD_GROOTTE / 2
+    start_y = -BORD_GROOTTE / 2
+    turtle.fillcolor("red")
+    turtle.begin_fill()
+    for x in X:
+        for y in Y:
+            turtle.penup()
+            turtle.goto(start_x + x * HOKJE, start_y + y * HOKJE)
+            turtle.pendown()
+            turtle.forward(HOKJE)
+            turtle.right(90)
+            turtle.forward(HOKJE)
+            turtle.right(90)
+            turtle.forward(HOKJE)
+            turtle.right(90)
+            turtle.forward(HOKJE)
+            turtle.right(90)
+    turtle.end_fill()
+
+
+
+def draw_ship(x, y, length, horiz=True):
+    turtle.penup()
+    turtle.goto(x*BORD_GROOTTE, y*BORD_GROOTTE)
+    turtle.pendown()
+    turtle.begin_fill()
+    for _ in range(2):
+        if horiz: turtle.forward(length*BORD_GROOTTE)
+        else: turtle.forward(BORD_GROOTTE)
+        turtle.right(90)
+        if horiz: turtle.forward(BORD_GROOTTE)
+        else: turtle.forward(length*BORD_GROOTTE)
+        turtle.right(90)
+    turtle.end_fill()
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -259,8 +323,9 @@ while spelAfgelopen == False:
     ingevulde_coordinaat, aantalPogingen = vraag_speler_om_coordinaten(aantalPogingen, hoogte, breedte)
     print("Aantal pogingen gedaan:", aantalPogingen)
     speelBord = verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen)
-    spelAfgelopen = controleer_einde_spel(alle_schepen, spelAfgelopen)
+    spelAfgelopen = controleer_einde_spel(alle_schepen)
     toonBord(speelBord, hoogte, breedte)
+
 
 #spel afgelopen: geef gebruiker een compliment
 if spelAfgelopen == True:
@@ -268,3 +333,6 @@ if spelAfgelopen == True:
     print("Je hebt in ", aantalPogingen, "pogingen geraden waar alle schepen lagen")
     print("Dit was hoe de schepen waren geplaatst")
     toonBord(bord, hoogte, breedte)
+
+
+turtle.done()
