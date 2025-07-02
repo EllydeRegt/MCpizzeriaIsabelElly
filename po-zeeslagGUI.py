@@ -12,10 +12,15 @@ turtle.speed(0)             # Zet de snelheid op maximaal om snel te tekenen
 
 HOKJE = 30
 BORD_GROOTTE = 300
+START_X = -BORD_GROOTTE / 2
+START_Y = BORD_GROOTTE / 2
 
 SCHIP = " 0 "
 WATER = " - "
 MIS = " / "
+RAAK_KLEUR = "red"
+MIS_KLEUR = "blue"
+GERADEN_SCHIP = "green"
 
 spelAfgelopen = False
 aantalPogingen = 0
@@ -103,34 +108,33 @@ def geenSchepenRond(bord, Y, X, hoogte, breedte):
 
 def plaats_schepen(bord, breedte, hoogte):
     bord, Y, X = plaatsSchip(bord, breedte, hoogte, 2)
-    teken_schip(X, Y)
     schip1 = []
     for i in range(len(Y)):
-        coordinaat = [Y[i], X[i]]
+        coordinaat = [X[i], Y[i]]
         schip1.append(coordinaat)
     print("schip1", schip1)
     bord, Y, X = plaatsSchip(bord, breedte, hoogte, 3)
     schip2 = []
     for i in range(len(Y)):
-        coordinaat = [Y[i], X[i]]
+        coordinaat = [X[i], Y[i]]
         schip2.append(coordinaat)
     print("schip2", schip2)
     bord, Y, X = plaatsSchip(bord, breedte, hoogte, 3)
     schip3 = []
     for i in range(len(Y)):
-        coordinaat = [Y[i], X[i]]
+        coordinaat = [X[i], Y[i]]
         schip3.append(coordinaat)
     print("schip3", schip3)
     bord, Y, X = plaatsSchip(bord, breedte, hoogte, 4)
     schip4 = []
     for i in range(len(Y)):
-        coordinaat = [Y[i], X[i]]
+        coordinaat = [X[i], Y[i]]
         schip4.append(coordinaat)
     print("schip4", schip4)
     bord, Y, X = plaatsSchip(bord, breedte, hoogte, 5)
     schip5 = []
     for i in range(len(Y)):
-        coordinaat = [Y[i], X[i]]
+        coordinaat = [X[i], Y[i]]
         schip5.append(coordinaat)
     print("schip5", schip5)
     return bord, schip1, schip2, schip3, schip4, schip5
@@ -200,16 +204,18 @@ def verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen):
     X = ingevulde_coordinaat[0]
     if bord[Y][X] == SCHIP:                        # als er op de ingevulde coordinaat een "0" ligt (een schip)
         print("Raak! Op deze coordinaat lag een schip!")
+        teken_hokje(X, Y, RAAK_KLEUR)
         speelBord[Y][X] = SCHIP                    # toont op het speelBord wat er geraakt is
         print("alle_schepen", alle_schepen)
         for schip in alle_schepen:                 # controleert voor ieder schip of de coordinaat op dat schip ligt
-            if [Y, X] in schip:
-                schip.remove([Y, X])               # .remove() verwijdert de geraakte coordinaat uit de lijst van dat schip
+            if [X, Y] in schip:
+                schip.remove([X, Y])               # .remove() verwijdert de geraakte coordinaat uit de lijst van dat schip
                 if schip == []:
                     print("Schip is gezonken")
         print("alle_schepen", alle_schepen)
     else: 
         print("Helaas!, dit was mis, probeer opnieuw!")
+        teken_hokje(X, Y, MIS_KLEUR)
         speelBord[Y][X] = MIS
     return speelBord
 
@@ -222,64 +228,58 @@ def controleer_einde_spel(alle_schepen):
 
 
 def teken_bord(hoogte, breedte):   
-    start_x = -BORD_GROOTTE / 2 
-    start_y = -BORD_GROOTTE / 2
     for rij in range(hoogte + 1):
         turtle.penup()
-        turtle.goto(start_x, start_y + rij * HOKJE)
+        turtle.goto(START_X, START_Y - rij * HOKJE)
         turtle.pendown()
         turtle.forward(BORD_GROOTTE)
     
     # vanaf hier de verticale lijnen
-    turtle.left(90)
+    turtle.right(90)
     for kolom in range(breedte + 1):
         turtle.penup()
-        turtle.goto(start_x + kolom * HOKJE, start_y)
+        turtle.goto(START_X + kolom * HOKJE, START_Y)
         turtle.pendown()
         turtle.forward(BORD_GROOTTE)
+    turtle.penup()
+    turtle.home()
     
 
-def teken_schip(X, Y):
-    start_x = -BORD_GROOTTE / 2
-    start_y = -BORD_GROOTTE / 2
-    turtle.fillcolor("red")
+# def teken_schip(X, Y):
+#     print("X:", X, "Y:", Y)
+#     turtle.fillcolor(GERADEN_SCHIP)
+#     for x in X:
+#         for y in Y:
+#             turtle.begin_fill()
+#             turtle.penup()
+#             turtle.goto(START_X + x * HOKJE, START_Y - y * HOKJE)
+#             turtle.pendown()
+#             turtle.forward(HOKJE)
+#             turtle.right(90)
+#             turtle.forward(HOKJE)
+#             turtle.right(90)
+#             turtle.forward(HOKJE)
+#             turtle.right(90)
+#             turtle.forward(HOKJE)
+#             turtle.right(90)
+#             turtle.end_fill()
+#             turtle.penup()
+#             turtle.home()
+
+
+# tekent een hokje, blauw of rood aan de hand van de functie verwerk_schot (mis of raak)
+def teken_hokje(x, y, vulkleur):
+    turtle.fillcolor(vulkleur)
     turtle.begin_fill()
-    for x in X:
-        for y in Y:
-            turtle.penup()
-            turtle.goto(start_x + x * HOKJE, start_y + y * HOKJE)
-            turtle.pendown()
-            turtle.forward(HOKJE)
-            turtle.right(90)
-            turtle.forward(HOKJE)
-            turtle.right(90)
-            turtle.forward(HOKJE)
-            turtle.right(90)
-            turtle.forward(HOKJE)
-            turtle.right(90)
-    turtle.end_fill()
-
-
-
-def draw_ship(x, y, length, horiz=True):
     turtle.penup()
-    turtle.goto(x*BORD_GROOTTE, y*BORD_GROOTTE)
+    turtle.goto(START_X + x * HOKJE, START_Y - y* HOKJE)
     turtle.pendown()
-    turtle.begin_fill()
-    for _ in range(2):
-        if horiz: turtle.forward(length*BORD_GROOTTE)
-        else: turtle.forward(BORD_GROOTTE)
-        turtle.right(90)
-        if horiz: turtle.forward(BORD_GROOTTE)
-        else: turtle.forward(length*BORD_GROOTTE)
+    for i in range(4):
+        turtle.forward(HOKJE)
         turtle.right(90)
     turtle.end_fill()
-
-
-
-
-
-
+    turtle.penup()
+    turtle.home()
 
 
 
@@ -294,29 +294,11 @@ def draw_ship(x, y, length, horiz=True):
 bord, breedte, hoogte = maakBord()
 speelBord, breedte, hoogte = maakBord()
 
-
 #vul bord met willekeurige schepen
-
-# lengte_schip = 2
-# schepen_geplaatst = 0
-# # Xcoordinaten_schepen = []
-# # Ycoordinaten_schepen = []
-# while schepen_geplaatst < 4:
-#     bord, Y, X = plaatsSchip(bord, breedte, hoogte, lengte_schip)
-#     print("Y:", Y, "X:", X)
-#     # for i in range(len(X)):
-#     #     Xcoordinaten_schepen.append(X)
-#     #     Ycoordinaten_schepen.append(Y)
-#     lengte_schip += 1
-#     schepen_geplaatst += 1
-# # print("Xcoordinaten_schepen:", Xcoordinaten_schepen)
-# # print("Ycoordinaten_schepen:", Ycoordinaten_schepen)
-# bord, Y, X = plaatsSchip(bord, breedte, hoogte, 3)
-
 bord, schip1, schip2, schip3, schip4, schip5 = plaats_schepen(bord, breedte, hoogte)
 alle_schepen = [schip1, schip2, schip3, schip4, schip5]
 toonBord(bord, hoogte, breedte)
-toonBord(speelBord, hoogte, breedte)    #toon bord met schepen op het scherm
+toonBord(speelBord, hoogte, breedte)    #toon bord zonder schepen op het scherm
 
 #zolang spel niet is afgelopen, doe dan:
 while spelAfgelopen == False:
