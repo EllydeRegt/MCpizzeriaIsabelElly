@@ -227,12 +227,19 @@ def controleer_einde_spel(alle_schepen):
     return spelAfgelopen
 
 
-def teken_bord(hoogte, breedte):   
+def teken_bord(hoogte, breedte):  
+    # tekent de horizontale lijnen 
     for rij in range(hoogte + 1):
         turtle.penup()
         turtle.goto(START_X, START_Y - rij * HOKJE)
         turtle.pendown()
         turtle.forward(BORD_GROOTTE)
+    # Hij 'tekent' de letters naast het bord
+    for rij in range(hoogte):
+        turtle.penup()
+        turtle.goto(START_X - 15, START_Y - rij * HOKJE - 15)    # - 15 zorgt ervoor dat de letters netjes naast het bijbehorende hokje en niet op het bord komen
+        turtle.pendown()                         
+        turtle.write(chr(65 + rij), align="right", font=("Arial", 12, "normal"))    #.write laat turtle typen
     
     # vanaf hier de verticale lijnen
     turtle.right(90)
@@ -241,10 +248,17 @@ def teken_bord(hoogte, breedte):
         turtle.goto(START_X + kolom * HOKJE, START_Y)
         turtle.pendown()
         turtle.forward(BORD_GROOTTE)
+    # hij 'tekent' de cijfers boven het bord
+    for kolom in range(breedte):
+        turtle.penup()
+        turtle.goto(START_X + kolom * HOKJE  + 15, START_Y + 15)  # + 15 zorgt ervoor dat de cijfers netjes boven het bijbehorende hokje en niet op het bord komen
+        turtle.pendown()                                       
+        turtle.write(str((kolom + 1)), align="center", font=("Arial", 12, "normal"))    # str() is nodig omdat je met "" de variabele kolom niet kan gebruiken
     turtle.penup()
     turtle.home()
     
 
+###### functie werkt, maar is niet nodig omdat speler zelf schepen 'onthult' ###########
 # def teken_schip(X, Y):
 #     print("X:", X, "Y:", Y)
 #     turtle.fillcolor(GERADEN_SCHIP)
@@ -266,6 +280,7 @@ def teken_bord(hoogte, breedte):
 #             turtle.penup()
 #             turtle.home()
 
+#######################################################
 
 # tekent een hokje, blauw of rood aan de hand van de functie verwerk_schot (mis of raak)
 def teken_hokje(x, y, vulkleur):
