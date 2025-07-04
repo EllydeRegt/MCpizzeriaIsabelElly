@@ -22,13 +22,12 @@ WATER = " - "
 MIS = " / "
 RAAK_KLEUR = "red"
 MIS_KLEUR = "blue"
-GERADEN_SCHIP = "green"
 
 spelAfgelopen = False
-aantalPogingen = 0
 
 ### FUNCTIEDEFINITIE ###
 
+# legt uit hoe het spel werkt
 def uitleg_spel():
     print("Je gaat het spel zeeslag spelen. Ik leg uit hoe het werkt")
     print("Je vijand heeft een vloot, je weet niet precies waar, maar wel welke schepen")
@@ -42,7 +41,7 @@ def uitleg_spel():
     print("Probeer in zo min mogelijk pogingen de vloot tot zinken te brengen.")
     print("Veel succes!")
 
-# maakt een leeg bord, wordt 2x aangehaald, 1 met schepen 1 zonder (het speelbord)
+# maakt een leeg bord, wordt 2x aangehaald, 1 met schepen, 1 zonder schepen (het speelbord)
 def maakBord():
     bord = []
     for y in range(HOOGTE):
@@ -107,6 +106,7 @@ def geenSchepenRond(bord, y, x):
                             schepen_omheen = True
     return schepen_omheen
 
+# plaatst schepen van verschillende lengtes op het bord
 # is niet in een for-loop gezet zodat twee schepen van 3 geplaatst konden worden, zoals in het echte spel
 # ook konden zo de coordinaten van alle schepen in een apparte lijst worden gezet
 def plaats_schepen(bord):
@@ -137,6 +137,7 @@ def plaats_schepen(bord):
         schip5.append(coordinaat)
     return bord, schip1, schip2, schip3, schip4, schip5
 
+# vraagt de speler om een coördinaat en returned deze in een lijst
 def vraag_speler_om_coordinaten(aantalPogingen):
     goeieGok = False
     geldige_X = False
@@ -170,6 +171,7 @@ def vraag_speler_om_coordinaten(aantalPogingen):
     ingevulde_coordinaat.append(Y_coordinaat)
     return ingevulde_coordinaat, aantalPogingen
 
+# controleert of de ingevoerde x-coördinaat één letter is en zet deze evt. om in een hoofdletter
 def controleer_X(invoer):
     geldige_X = invoer.isalpha()       # .isalpha() is een boolean die controleert of het letters uit het alphabet zijn
     if geldige_X == False:             # als de gok geen letter is
@@ -184,6 +186,7 @@ def controleer_X(invoer):
             geldige_X = True
     return invoer, geldige_X
 
+# controleert of de ingevoerde y-coördinaat een getal is
 def controleer_Y(invoer):
     geldige_Y = invoer.isdigit()       # .isdigit() is een boolean die controleert of het hele, positieve getallen zijn
     if geldige_Y == False:
@@ -193,6 +196,7 @@ def controleer_Y(invoer):
         geldige_Y = True
     return invoer, geldige_Y
 
+# kijkt of schot raak/mis en of schip is gezonken
 def verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen):
     y = ingevulde_coordinaat[1]
     x = ingevulde_coordinaat[0]
@@ -211,14 +215,15 @@ def verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen):
         speelBord[y][x] = MIS
     return speelBord
 
+#controleert of alle schepen zijn gezonken en het spel eindigt
 def controleer_einde_spel(alle_schepen):
-    spelAfgelopen = True
+    potjeAfgelopen = True
     for schip in alle_schepen:
         if schip != []:         # als er een schip is dat nog niet is gezonken (en dus nog coordinaten heeft in de lijst)
-            spelAfgelopen = False
-    return spelAfgelopen
+            potjeAfgelopen = False
+    return potjeAfgelopen
 
-
+# tekent het bord met turtle
 def teken_bord():  
     # tekent de horizontale lijnen 
     for rij in range(HOOGTE + 1):   # +1 omdat de lijnen de hokjes omlijnen, er is dus 1 lijn extra
@@ -263,40 +268,77 @@ def teken_hokje(x, y, vulkleur):
     turtle.penup()
     turtle.home()   # .home() zorgt ervoor dat de turtle terug naar zijn beginpositie gaat, waardoor deze geen verkeerde lijnen gaat tekenen
 
+# slaat de score op in een bestand
 def opslaan_score(aantalPogingen):
     score = str(aantalPogingen)
     bestand = open("scores.txt", "a") #a omdat je achteraan bestand wil toevoegen
-    bestand.write('\n')									#op een nieuwe regel toevoegen
+    bestand.write("\n")
     bestand.write(score)
     bestand.close()
     print("klaar")
 
+# toont een overzicht met de behaalde scores en de highscore
+def laten_zien_scores():
+    scores = []
+    bestand = open("scores.txt", "r")
+    inhoud_als_lijst = bestand.readlines() # zet elk regel in een lijst
 
+    # print netjes de scores en zet deze in een nette lijst (zonder \n)
+    print("scores:")
+    for regel in inhoud_als_lijst:
+      regel = regel.strip()     # .strip() haalt ook de \n weg, waardoor de scores gelijk onder elkaar worden geprint
+      print(regel)
+      scores.append(regel)
+    highscore = min(scores)
+    print("Hoe minder pogingen, hoe beter. De laagst mogelijke score is 17")
+    print("Je highscore is:", highscore)
+    bestand.close()
+    
 
 ### HOOFDPROGRAMMA ###
 
-#maak een leeg bord
 uitleg_spel()
-bord = maakBord()
-speelBord = maakBord()     # dit wordt het bord dat de speler ziet
-#vul bord met willekeurige schepen
-bord, schip1, schip2, schip3, schip4, schip5 = plaats_schepen(bord)
-alle_schepen = [schip1, schip2, schip3, schip4, schip5]
-toonBord(bord)
-toonBord(speelBord)    #toon bord zonder schepen op het scherm
 
-#zolang spel niet is afgelopen, doe dan:
 while spelAfgelopen == False:
-    ingevulde_coordinaat, aantalPogingen = vraag_speler_om_coordinaten(aantalPogingen)
-    print("Aantal pogingen gedaan:", aantalPogingen)
-    speelBord = verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen)
-    spelAfgelopen = controleer_einde_spel(alle_schepen)
-    toonBord(speelBord)
+    potjeAfgelopen = False
+    aantalPogingen = 0
 
-#spel afgelopen: geef gebruiker een compliment
-if spelAfgelopen == True:
-    print("Goed gespeeld!")
-    print("Je hebt in ", aantalPogingen, "pogingen geraden waar alle schepen lagen")
-    opslaan_score(aantalPogingen)
+    #maak een leeg bord
+    bord = maakBord()
+    speelBord = maakBord()     # dit wordt het bord dat de speler ziet
+
+    #vul bord met willekeurige schepen
+    bord, schip1, schip2, schip3, schip4, schip5 = plaats_schepen(bord)
+    alle_schepen = [schip1, schip2, schip3, schip4, schip5]
+    laten_zien_scores()
+    toonBord(bord)
+    toonBord(speelBord)    #toon bord zonder schepen op het scherm
+
+    #zolang het potje niet is afgelopen, doe dan:
+    while potjeAfgelopen == False:
+        ingevulde_coordinaat, aantalPogingen = vraag_speler_om_coordinaten(aantalPogingen)
+        print("Aantal pogingen gedaan:", aantalPogingen)
+        speelBord = verwerkSchot(bord, ingevulde_coordinaat, speelBord, alle_schepen)
+        potjeAfgelopen = controleer_einde_spel(alle_schepen)
+        toonBord(speelBord)
+
+    #spel afgelopen: geef gebruiker een compliment
+    if potjeAfgelopen == True:
+        print("Goed gespeeld!")
+        print("Je hebt in ", aantalPogingen, "pogingen geraden waar alle schepen lagen")
+        if aantalPogingen == "17":
+            print("Hoera! Je hebt de topscore behaalt")
+        else:
+            print("Met", (aantalPogingen - 17), "pogingen minder zou de topscore zijn bereikt")
+        opslaan_score(aantalPogingen)
+        laten_zien_scores()
+
+        # als de gebruiker nog een potje wilt doen
+        invoer = input("Type 1 als je een revanche wilt, en 2 als je wilt stoppen met spelen.")
+        if invoer == "1":
+            potjeAfgelopen = False
+            # hier moet nog code die de window van de turtle afsluit, zodat schepen opnieuw kunnen worden geplaatst
+        else:
+            print("Bedankt voor het spelen!")
 
 turtle.done()
