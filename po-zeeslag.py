@@ -29,7 +29,7 @@ aantalPogingen = 0
 
 ### FUNCTIEDEFINITIE ###
 
-def spelUitleg():
+def uitleg_spel():
     print("Je gaat het spel zeeslag spelen. Ik leg uit hoe het werkt")
     print("Je vijand heeft een vloot, je weet niet precies waar, maar wel welke schepen")
     print("Een schip van 2 hokjes lang, twee van 3 hokjes, een van 4 en een van 5 hokjes")
@@ -189,11 +189,6 @@ def controleer_Y(invoer):
     if geldige_Y == False:
         print("Dit is geen geldig getal, voer een getal in")
     else:
-        ###!! DEZE CODE WERKT NIET MEER MET GETAL 10, DAAROM IN COMMENTAAR !!!###
-        # if len(invoer) > 1 and invoer != 10:                      # controleert of de invoer 1 teken is 
-        #     print("Dit is meer dan 1 getal, voer 1 getal in")
-        #     geldige_Ycoordinaat = False
-        # else:
         print('gok is een getal')
         geldige_Y = True
     return invoer, geldige_Y
@@ -252,35 +247,7 @@ def teken_bord():
         turtle.pendown() 
         turtle.write(chr(65 + kolom), align="right", font=("Arial", 12, "normal"))    #.write(...) laat turtle typen                                      
     turtle.penup()
-    turtle.home()
-    
-
-################################################################################
-
-## functie werkt, maar is niet nodig omdat speler zelf schepen 'onthult'
-
-# def teken_schip(x, y):
-#     print("x:", x, "y:", y)
-#     turtle.fillcolor(GERADEN_SCHIP)
-#     for verticaal in X:
-#         for horizontaal in Y:
-#             turtle.begin_fill()
-#             turtle.penup()
-#             turtle.goto(START_X + verticaal * HOKJE, START_Y - horizontaal * HOKJE)
-#             turtle.pendown()
-#             turtle.forward(HOKJE)
-#             turtle.right(90)
-#             turtle.forward(HOKJE)
-#             turtle.right(90)
-#             turtle.forward(HOKJE)
-#             turtle.right(90)
-#             turtle.forward(HOKJE)
-#             turtle.right(90)
-#             turtle.end_fill()
-#             turtle.penup()
-#             turtle.home()
-
-#############################################################################
+    turtle.home()   # .home() zorgt ervoor dat de turtle terug naar zijn beginpositie gaat, waardoor deze geen verkeerde lijnen gaat tekenen
 
 # tekent een hokje, blauw of rood aan de hand van de functie verwerk_schot (mis of raak)
 def teken_hokje(x, y, vulkleur):
@@ -294,18 +261,28 @@ def teken_hokje(x, y, vulkleur):
         turtle.right(90)
     turtle.end_fill()
     turtle.penup()
-    turtle.home()
+    turtle.home()   # .home() zorgt ervoor dat de turtle terug naar zijn beginpositie gaat, waardoor deze geen verkeerde lijnen gaat tekenen
+
+def opslaan_score(aantalPogingen):
+    score = str(aantalPogingen)
+    bestand = open("scores.txt", "a") #a omdat je achteraan bestand wil toevoegen
+    bestand.write('\n')									#op een nieuwe regel toevoegen
+    bestand.write(score)
+    bestand.close()
+    print("klaar")
+
 
 
 ### HOOFDPROGRAMMA ###
 
 #maak een leeg bord
+uitleg_spel()
 bord = maakBord()
 speelBord = maakBord()     # dit wordt het bord dat de speler ziet
-
 #vul bord met willekeurige schepen
 bord, schip1, schip2, schip3, schip4, schip5 = plaats_schepen(bord)
 alle_schepen = [schip1, schip2, schip3, schip4, schip5]
+toonBord(bord)
 toonBord(speelBord)    #toon bord zonder schepen op het scherm
 
 #zolang spel niet is afgelopen, doe dan:
@@ -320,5 +297,6 @@ while spelAfgelopen == False:
 if spelAfgelopen == True:
     print("Goed gespeeld!")
     print("Je hebt in ", aantalPogingen, "pogingen geraden waar alle schepen lagen")
+    opslaan_score(aantalPogingen)
 
 turtle.done()
