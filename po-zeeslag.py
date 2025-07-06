@@ -268,8 +268,8 @@ def teken_hokje(x, y, vulkleur):
 def opslaan_score(aantalPogingen):
     score = str(aantalPogingen)
     bestand = open("scores.txt", "a") #a omdat je achteraan bestand wil toevoegen
-    bestand.write("\n")
     bestand.write(score)
+    bestand.write("\n")
     bestand.close()
     print("klaar")
 
@@ -321,8 +321,6 @@ while spelAfgelopen == False:
     #vul bord met willekeurige schepen
     bord, schip1, schip2, schip3, schip4, schip5 = plaats_schepen(bord)
     alle_schepen = [schip1, schip2, schip3, schip4, schip5]
-    laten_zien_scores()
-    toonBord(bord)
     toonBord(speelBord)    #toont bord zonder schepen op het scherm
 
     #zolang het potje niet is afgelopen, doe dan:
