@@ -6,10 +6,6 @@
 import random
 import turtle
 
-turtle.hideturtle()
-turtle.pencolor("blue")     
-turtle.speed(0)             # Zet de snelheid op maximaal om snel te tekenen
-
 BREEDTE = 10
 HOOGTE = 10
 HOKJE = 30
@@ -49,11 +45,11 @@ def maakBord():
         for x in range(BREEDTE):
             rij.append(WATER)                   #maakt een rij met juiste aantal kolommen
         bord.append(rij)
-    teken_bord()
     return bord
 
 # print het bord, nu niet per se meer nodig vanwege de turtle die later is toegevoegd
 def toonBord(bord):
+    teken_bord()
     for kolom in range(BREEDTE):
         print(" ", chr(65+kolom), end="")       #spatie en dan de letters boven het bord
     print()                                     #vanaf hier een enter en verder met het bord
@@ -294,12 +290,27 @@ def laten_zien_scores():
     print("Je highscore is:", highscore)
     bestand.close()
     
+def geef_feedback_einde_spel(aantalPogingen):
+    print("Goed gespeeld!")
+    print("Je hebt in ", aantalPogingen, "pogingen geraden waar alle schepen lagen")
+    if aantalPogingen == "17":
+        print("Hoera! Je hebt de topscore behaalt")
+    else:
+        print("Met", (aantalPogingen - 17), "pogingen minder zou de topscore zijn bereikt")
+    opslaan_score(aantalPogingen)
+    laten_zien_scores()
+
 
 ### HOOFDPROGRAMMA ###
 
 uitleg_spel()
 
 while spelAfgelopen == False:
+    # deze staan in de while, zodat ze ook bij een nieuw potje gelden
+    turtle.hideturtle()
+    turtle.pencolor("blue")     
+    turtle.speed(0)             # Zet de snelheid op maximaal om snel te tekenen
+
     potjeAfgelopen = False
     aantalPogingen = 0
 
@@ -312,7 +323,7 @@ while spelAfgelopen == False:
     alle_schepen = [schip1, schip2, schip3, schip4, schip5]
     laten_zien_scores()
     toonBord(bord)
-    toonBord(speelBord)    #toon bord zonder schepen op het scherm
+    toonBord(speelBord)    #toont bord zonder schepen op het scherm
 
     #zolang het potje niet is afgelopen, doe dan:
     while potjeAfgelopen == False:
@@ -324,21 +335,13 @@ while spelAfgelopen == False:
 
     #spel afgelopen: geef gebruiker een compliment
     if potjeAfgelopen == True:
-        print("Goed gespeeld!")
-        print("Je hebt in ", aantalPogingen, "pogingen geraden waar alle schepen lagen")
-        if aantalPogingen == "17":
-            print("Hoera! Je hebt de topscore behaalt")
-        else:
-            print("Met", (aantalPogingen - 17), "pogingen minder zou de topscore zijn bereikt")
-        opslaan_score(aantalPogingen)
-        laten_zien_scores()
-
+        geef_feedback_einde_spel(aantalPogingen)
         # als de gebruiker nog een potje wilt doen
         invoer = input("Type 1 als je een revanche wilt, en 2 als je wilt stoppen met spelen.")
         if invoer == "1":
             potjeAfgelopen = False
-            # hier moet nog code die de window van de turtle afsluit, zodat schepen opnieuw kunnen worden geplaatst
+            turtle.reset()      # .reset() verwijdert alle tekeningen en brengt de turtle terug naar de beginpositie, zodat een leeg raster getekent kan worden
         else:
             print("Bedankt voor het spelen!")
-
+            spelAfgelopen = True
 turtle.done()
